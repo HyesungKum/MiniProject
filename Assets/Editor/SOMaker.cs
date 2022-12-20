@@ -27,6 +27,15 @@ public class SOMaker : EditorWindow
 
     void OnGUI()
     {
+        if (GUILayout.Button("Test"))
+        {
+            //동적으로 변수이름 할당하기
+            //var aaa = 
+        }
+        if (GUILayout.Button("result"))
+        {
+        }
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Choose your scv data sheet");
         if (GUILayout.Button("Find SCV"))

@@ -1,0 +1,7 @@
+int,float,int,int,int,float,float,int,int
+level,hp,atk,def,speed,atkSpeed,heal,drop,exp
+1,100,10,1,10,1,0,5,10
+2,115,11,1,10,1,0,5,25
+3,130,11,1,10,1,0,5,50
+4,150,11,1,10,1,0,5,80
+5,180,12,1,10,1,0,5,0

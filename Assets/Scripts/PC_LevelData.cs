@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "DataSheet", menuName = "ScriptableObj/DataSheet", order = int.MaxValue)]
-public class DataSheet : ScriptableObject
+[CreateAssetMenu(fileName = "PC_LevelData", menuName = "ScriptableObj/PC_LevelData", order = int.MaxValue)]
+public class PC_LevelData : ScriptableObject
 {
      public int level = 0;
      public float hp = 0f;

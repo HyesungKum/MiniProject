@@ -18,7 +18,7 @@ public class SOMaker : EditorWindow
 
     static string savePath = null;
 
-    static string GetGUID = null;
+    static string CustomGUID = null;
 
     [MenuItem("Tool/KHSOMaker")]
     static void Init()
@@ -28,8 +28,8 @@ public class SOMaker : EditorWindow
 
         soMaker.titleContent.text = "SOMaker";
 
-        soMaker.minSize = new Vector2(340f, 100f);
-        soMaker.maxSize = new Vector2(340f, 100f);
+        soMaker.minSize = new Vector2(500f, 100f);
+        soMaker.maxSize = new Vector2(500f, 100f);
     }
 
     void OnGUI()
@@ -40,24 +40,54 @@ public class SOMaker : EditorWindow
         //read csv
         if (GUILayout.Button("Find CSV"))
         {
-            string csvFilePath = EditorUtility.OpenFilePanel("", Directory.GetCurrentDirectory() + "DesignFolder", "csv");
-            StreamReader reader = new(csvFilePath);
+            string csvFilePath = EditorUtility.OpenFilePanel("", Directory.GetCurrentDirectory() + "/DesignFolder/", "csv");
 
-            FileName = csvFilePath.Split("/")[^1].Replace(".csv", "");
+            if (!string.IsNullOrWhiteSpace(csvFilePath))
+            {
+                StreamReader reader = new(csvFilePath);
 
-            DataParsing(reader);
+                FileName = csvFilePath.Split("/")[^1].Replace(".csv", "");
+
+                DataParsing(reader);
+                MakeSOClass(FileName);
+                AssetDatabase.Refresh();
+            }
         }
 
-        if ( FileName != null && GUILayout.Button("Create SO"))
+        //read meta
+        if (GUILayout.Button("Find Meta"))
         {
-            MakeSOClass(FileName);
+            string metaFilePath = EditorUtility.OpenFilePanel("", Directory.GetCurrentDirectory() + "/Assets/Scripts/", "meta");
+
+            if (metaFilePath != "" || metaFilePath != null)
+            {
+                StreamReader reader = new(metaFilePath);
+
+                FileName = metaFilePath.Split("/")[^1].Replace(".cs.meta", "");
+
+                string csvFilePath = Directory.GetCurrentDirectory() + "\\DesignFolder\\" + $"{FileName}.csv";
+                StreamReader reReader = new(csvFilePath);
+
+                DataParsing(reReader);
+                GetGUID(reader);
+            }
         }
-        
-        if ( File.Exists(savePath + $"/{FileName}") && GUILayout.Button("Generate SO"))
+
+        if (CustomGUID !=null && GUILayout.Button("Create SO"))
         {
-            MakeFile(GUID.Generate().ToString());
+            MakeFile(CustomGUID);
+
+            dataName = new();
+            dataType = new();
+            data = new();
+
+            FileName = null;
+            savePath = null;
+            CustomGUID = null;
+
+            AssetDatabase.Refresh();
         }
-        
+
         EditorGUILayout.EndHorizontal();
     }
 
@@ -98,7 +128,7 @@ public class SOMaker : EditorWindow
                             sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
                             break;
                         case "float":
-                            sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + "f ");
+                            sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
                             break;
                         case "string":
                             sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
@@ -131,7 +161,7 @@ public class SOMaker : EditorWindow
                     sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" {dataName[i]}" + " = 0;");
                     break;
                 case "float":
-                    sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" {dataName[i]}f" + " = 0;");
+                    sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" {dataName[i]}" + " = 0f;");
                     break;
                 case "string":
                     sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" \"{dataName[i]}\"" + " = \"\";");
@@ -146,15 +176,32 @@ public class SOMaker : EditorWindow
 
         outStream.Write(sb);
         outStream.Close();
+    }
+    public void GetGUID(StreamReader readMeta)
+    {
+        int i = 0;
 
-        AssetDatabase.ImportAsset(savePath, ImportAssetOptions.ImportRecursive);
+        while (i != 2)
+        {
+            if (i == 1)
+            {
+                CustomGUID = readMeta.ReadLine().Replace("guid: ", "");
+            }
+            else
+            {
+                readMeta.ReadLine();
+            }
+
+            i++;
+        }
+        Debug.Log(CustomGUID);
     }
     public void MakeFile(string guid)
     {
         for (int i = 0; i < data.Count; i++)
         {
             string[] args = data[i].ToString().Split(" ");
-            
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("%YAML 1.1");
@@ -168,25 +215,23 @@ public class SOMaker : EditorWindow
             sb.AppendLine("  m_GameObject: {fileID: 0}");
             sb.AppendLine("  m_Enabled: 1");
             sb.AppendLine("  m_EditorHideFlags: 0");
-            sb.AppendLine("  m_Script: { fileID: 11500000, guid: " + "7da5b8933b23aec49a2d1cf5ad3b0c4a" + ", type: 3}");
-            sb.AppendLine($"  m_Name: {"name"}");
+            sb.AppendLine("  m_Script: { fileID: 11500000, guid: " + guid + ", type: 3}");
+            sb.AppendLine($"  m_Name: {FileName}_{args[1]}_{args[2]}");
             sb.AppendLine("  m_EditorClassIdentifier:");
-            for (int j = 3; j < args.Length - 3; j += 3)
+            for (int j = 0; j < args.Length - 1; j += 3)
             {
                 switch (args[j])
                 {
                     case "float"://float 예외처리
-                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2]}");
+                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2].Replace("f","")}");
                         break;
                     default:
-                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2].Replace("f", "")}");
+                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2]}");
                         break;
                 }
             }
 
             savePath = Directory.GetCurrentDirectory() + "\\Assets\\Resources\\";
-
-            Debug.Log(savePath);
 
             StreamWriter outStream = File.CreateText(savePath + $"{FileName}_{args[1]}_{args[2]}.asset");
             outStream.Write(sb);

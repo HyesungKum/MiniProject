@@ -1,4 +1,4 @@
 int,string,int,int,float,float,int
 id,name,first_spawn_Time,spawn_Time,min_Time,discountTime,spawn_range
-1,±âº»Çü,0,5,0.3,0.02,20
-2,±ºÁýÇü,180,20,3,0.1,25
+1,ê¸°ë³¸í˜•,0,5,0.3,0.02,20
+2,êµ°ì§‘í˜•,180,20,3,0.1,25

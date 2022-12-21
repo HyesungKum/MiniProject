@@ -64,6 +64,7 @@ public class SOMaker : EditorWindow
 
                 DataParsing(reader, ref dataType, ref dataName, ref data);
                 MakeSOClass(FileName, Directory.GetCurrentDirectory()+"/Assets/Scripts/DataTable/");
+                data = null;
                 AssetDatabase.Refresh();
             }
         }
@@ -147,13 +148,13 @@ public class SOMaker : EditorWindow
                     switch (dataType[i])
                     {
                         case "int":
-                            sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
+                            sb.Append(dataType[i] + ":cut:" + dataName[i] + ":cut:" + token[i] + ":cut:");
                             break;
                         case "float":
-                            sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
+                            sb.Append(dataType[i] + ":cut:" + dataName[i] + ":cut:" + token[i] + ":cut:");
                             break;
                         case "string":
-                            sb.Append(dataType[i] + " " + dataName[i] + " " + token[i] + " ");
+                            sb.Append(dataType[i] + ":cut:" + dataName[i] + ":cut:" + token[i] + ":cut:");
                             break;
                     }
                 }
@@ -186,13 +187,16 @@ public class SOMaker : EditorWindow
             switch (dataType[i])
             {
                 case "int":
-                    sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" {dataName[i]}" + " = 0;");
+                    sb.AppendLine("     " + "public " + $"{dataType[i]} {dataName[i]}" + " = 0;");
                     break;
                 case "float":
-                    sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" {dataName[i]}" + " = 0f;");
+                    sb.AppendLine("     " + "public " + $"{dataType[i]} {dataName[i]}" + " = 0f;");
                     break;
                 case "string":
-                    sb.AppendLine("     " + "public " + $"{dataType[i]}" + $" \"{dataName[i]}\"" + " = \"\";");
+                    sb.AppendLine("     " + "public " + $"{dataType[i]} {dataName[i]}" + " = \"\";");
+                    break;
+                default:
+                    sb.AppendLine("     " + "public " + $"{dataType[i]} {dataName[i]}" + " = null;");
                     break;
             }
         }
@@ -258,7 +262,7 @@ public class SOMaker : EditorWindow
     {
         for (int i = 0; i < data.Count; i++)
         {
-            string[] args = data[i].ToString().Split(" ");
+            string[] args = data[i].ToString().Split(":cut:");
 
             StringBuilder sb = new();
 
@@ -280,6 +284,12 @@ public class SOMaker : EditorWindow
             {
                 switch (args[j])
                 {
+                    case "int":
+                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2]}");
+                        break;
+                    case "string":
+                        sb.AppendLine($"  {args[j + 1]}: {args[j + 2]}");
+                        break;
                     case "float"://float 예외처리
                         sb.AppendLine($"  {args[j + 1]}: {args[j + 2].Replace("f","")}");
                         break;

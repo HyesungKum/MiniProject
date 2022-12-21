@@ -1,23 +1,37 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
-using UnityEngine.TextCore.Text;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager.UI;
 using System.Text;
 
 public class SOMaker : EditorWindow
 {
+    /// <summary>
+    /// so class file name
+    /// </summary>
     static string FileName = null;
 
+    /// <summary>
+    /// parsing each data type
+    /// </summary>
     static List<string> dataType = new ();
+    /// <summary>
+    /// parsing each data name
+    /// </summary>
     static List<string> dataName = new ();
+    /// <summary>
+    /// parsing each combine data
+    /// </summary>
     static List<StringBuilder> data = new();
 
+    /// <summary>
+    /// path used save data
+    /// </summary>
     static string savePath = null;
 
+    /// <summary>
+    /// uniqe guid container
+    /// </summary>
     static string CustomGUID = null;
 
     [MenuItem("Tool/KHSOMaker")]
@@ -48,35 +62,36 @@ public class SOMaker : EditorWindow
 
                 FileName = csvFilePath.Split("/")[^1].Replace(".csv", "");
 
-                DataParsing(reader);
-                MakeSOClass(FileName);
+                DataParsing(reader, ref dataType, ref dataName, ref data);
+                MakeSOClass(FileName, Directory.GetCurrentDirectory()+"/Assets/Scripts/DataTable/");
                 AssetDatabase.Refresh();
             }
         }
 
-        //read meta
+        //read meta for guid
         if (GUILayout.Button("Find Meta"))
         {
-            string metaFilePath = EditorUtility.OpenFilePanel("", Directory.GetCurrentDirectory() + "/Assets/Scripts/", "meta");
+            string metaFilePath = EditorUtility.OpenFilePanel("", Directory.GetCurrentDirectory() + "/Assets/Scripts/DataTable/", "meta");
 
-            if (metaFilePath != "" || metaFilePath != null)
+            if (!string.IsNullOrWhiteSpace(metaFilePath))
             {
                 StreamReader reader = new(metaFilePath);
 
                 FileName = metaFilePath.Split("/")[^1].Replace(".cs.meta", "");
 
-                string csvFilePath = Directory.GetCurrentDirectory() + "\\DesignFolder\\" + $"{FileName}.csv";
+                string csvFilePath = Directory.GetCurrentDirectory() + "/DesignFolder/" + $"{FileName}.csv";
                 StreamReader reReader = new(csvFilePath);
 
-                DataParsing(reReader);
-                GetGUID(reader);
+                DataParsing(reReader, ref dataType, ref dataName, ref data);
+                CustomGUID = GetGUID(reader);
             }
         }
 
         if (CustomGUID !=null && GUILayout.Button("Create SO"))
         {
-            MakeFile(CustomGUID);
+            MakeSOFile(CustomGUID, Directory.GetCurrentDirectory() + $"/Assets/Resources/DataTable/{FileName}/");
 
+            //initialize
             dataName = new();
             dataType = new();
             data = new();
@@ -91,7 +106,14 @@ public class SOMaker : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
-    public void DataParsing(StreamReader readData)
+    /// <summary>
+    /// data parsing for editable string Builder list format
+    /// </summary>
+    /// <param name="readData"> need stream reader made by csv </param>
+    /// <param name="dataType"> string list for record data type </param>
+    /// <param name="dataName"> string list for record data name </param>
+    /// <param name="data"> referance string builder data list </param>
+    public void DataParsing(StreamReader readData, ref List<string> dataType, ref List<string> dataName, ref List<StringBuilder> data)
     {
         int j = 0;
         while (!readData.EndOfStream)
@@ -141,7 +163,13 @@ public class SOMaker : EditorWindow
             j++;
         }
     }
-    public void MakeSOClass(string name)
+
+    /// <summary>
+    /// Create Inheritance ScriptableObject Class
+    /// </summary>
+    /// <param name="name"> Class name </param>
+    /// <param name="path"> Cs file path, if value = null -> default path Assets/Scripts </param>
+    public void MakeSOClass(string name, string path)
     {
         StringBuilder sb = new();
 
@@ -170,22 +198,45 @@ public class SOMaker : EditorWindow
         }
         sb.AppendLine("}");
 
-        savePath = Directory.GetCurrentDirectory() + "\\Assets\\Scripts\\";
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            savePath = Directory.GetCurrentDirectory() + "\\Assets\\Scripts\\";
+        }
+        else
+        {
+            if (Directory.Exists(path))
+            {
+                savePath = path;
+            }
+            else
+            {
+                Directory.CreateDirectory(path);
+                savePath = path;
+            }
+        }
+
 
         StreamWriter outStream = File.CreateText(savePath + $"{name}.cs");
 
         outStream.Write(sb);
         outStream.Close();
     }
-    public void GetGUID(StreamReader readMeta)
+
+    /// <summary>
+    /// get guid read meta file
+    /// </summary>
+    /// <param name="readMeta"> need streamReaded meta file </param>
+    /// <returns> unique guid </returns>
+    public string GetGUID(StreamReader readMeta)
     {
+        string guid = null;
         int i = 0;
 
         while (i != 2)
         {
             if (i == 1)
             {
-                CustomGUID = readMeta.ReadLine().Replace("guid: ", "");
+                guid = readMeta.ReadLine().Replace("guid: ", "");
             }
             else
             {
@@ -194,15 +245,22 @@ public class SOMaker : EditorWindow
 
             i++;
         }
-        Debug.Log(CustomGUID);
+
+        return guid;
     }
-    public void MakeFile(string guid)
+
+    /// <summary>
+    /// make scriptable object read csv and guid
+    /// </summary>
+    /// <param name="guid"> uniqe guid </param>
+    /// <param name="path"> path for scriptable object file </param>
+    public void MakeSOFile(string guid, string path)
     {
         for (int i = 0; i < data.Count; i++)
         {
             string[] args = data[i].ToString().Split(" ");
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine("%YAML 1.1");
             sb.AppendLine("%TAG !u! tag:unity3d.com,2011:");
@@ -231,7 +289,23 @@ public class SOMaker : EditorWindow
                 }
             }
 
-            savePath = Directory.GetCurrentDirectory() + "\\Assets\\Resources\\";
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                savePath = Directory.GetCurrentDirectory() + "\\Assets\\Scripts\\";
+            }
+            else
+            {
+                if (Directory.Exists(path))
+                {
+                    savePath = path;
+                }
+                else
+                {
+                    Directory.CreateDirectory(path);
+                    savePath = path;
+                }
+            }
 
             StreamWriter outStream = File.CreateText(savePath + $"{FileName}_{args[1]}_{args[2]}.asset");
             outStream.Write(sb);

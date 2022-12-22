@@ -5,19 +5,77 @@ using UnityEngine;
 
 public class Playable : MonoBehaviour
 {
-    [SerializeField] private float PlayerSpeed;
+    [SerializeField] PC_LevelData[] LevelData = null;
+    //======================current player data scope==========================
+    [field: SerializeField] int curLevel { get; set; }
+    [field : SerializeField] float curHp { get; set; }
+    [field: SerializeField] int curAtk { get; set; }
+    [field: SerializeField] int curDef { get; set; }
+    [field: SerializeField] int curSpeed { get; set; }
+    [field: SerializeField] float curAtkSpeed { get;set; }
+    [field: SerializeField] float curHeal { get; set; }
+    [field: SerializeField] int curDrop { get; set; }
+    [field: SerializeField] int curExp { get; set; }
+    //=========================================================================
+
+    [SerializeField] private AbsorbRange AbsorbRange = null;
 
     private void Awake()
     {
-        PlayerSpeed = 10f;
+        SetPCParameter(1);
+        curExp      = 0 ;
     }
 
     void Update()
     {
-        InputControll();
-    }
+        MoveControll();
+        ExpControll();
 
-    public void InputControll()
+        #region debug
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            if (curLevel < LevelData.Length-1)
+                curLevel++;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if(curLevel>1)
+                curLevel--;
+        }
+
+        Debug.Log($" level    : {LevelData[curLevel - 1].level} "          );
+        Debug.Log($" hp       : {curHp}/{LevelData[curLevel - 1].hp}"      );
+        Debug.Log($" atk      : {LevelData[curLevel - 1].atk}"             );
+        Debug.Log($" def      : {LevelData[curLevel - 1].def}"             );
+        Debug.Log($" speed    : {LevelData[curLevel - 1].speed}"           );
+        Debug.Log($" atkSpeed : {LevelData[curLevel - 1].atkSpeed}"        );
+        Debug.Log($" heal     : {LevelData[curLevel - 1].heal}"            );
+        Debug.Log($" drop     : {LevelData[curLevel - 1].drop}"            );
+        Debug.Log($" Exp      : {curExp}/{LevelData[curLevel - 1].maxExp}" );
+        Debug.Log($"================================================="     );
+        #endregion
+    }
+    /// <summary>
+    /// setting pc parameter used level
+    /// setting upper level out of index, will be return this function
+    /// </summary>
+    /// <param name="level"> used level 1 ~ max</param>
+    public void SetPCParameter(int level)
+    {
+        level--;
+
+        if (LevelData[level] == null) return;
+
+        curLevel    = LevelData[level].level;
+        curHp       = LevelData[level].hp;
+        curAtk      = LevelData[level].atk;
+        curDef      = LevelData[level].def;
+        curSpeed    = LevelData[level].speed;
+        curAtkSpeed = LevelData[level].atkSpeed;
+        curHeal     = LevelData[level].heal;
+        curDrop     = LevelData[level].drop;
+    }
+    public void MoveControll()
     {
         Vector3 moveDir = Vector3.zero;
 
@@ -34,7 +92,7 @@ public class Playable : MonoBehaviour
         }
         #endif
         #endregion
-        this.transform.Translate(PlayerSpeed * Time.deltaTime * moveDir);
+        this.transform.Translate(LevelData[curLevel-1].speed * Time.deltaTime * moveDir);
 
         #region Mobile Controll
 #if Moblie
@@ -43,5 +101,27 @@ public class Playable : MonoBehaviour
         }
 #endif
         #endregion
+    }
+    public void ExpControll() //need call event 
+    {
+        if (LevelData[curLevel].maxExp == 0) return;
+
+        if (curExp >= LevelData[curLevel-1].maxExp)
+        {
+            curLevel++;
+
+            SetPCParameter(curLevel);
+
+            curExp = 0;
+        }
+    }
+    public void DropRangeControll()
+    {
+        AbsorbRange.Collider.radius = curDrop;
+    }
+
+    public void GetExp(int value)
+    {
+        curExp += value;
     }
 }

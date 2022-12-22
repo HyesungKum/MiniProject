@@ -1,0 +1,4 @@
+int,string,int,int,float,float,int
+id,name,first_spawn_Time,spawn_Time,min_Time,discountTime,spawn_range
+1,기본형,0,5,0.3,0.02,20
+2,군집형,180,20,3,0.1,25

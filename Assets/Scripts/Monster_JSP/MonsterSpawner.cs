@@ -55,7 +55,7 @@ public class MonsterSpawner : MonoBehaviour
         GameObject newMonster = null;
 
         // circle의 random한 좌표값 생성 + spawn range 
-        Vector3 randomPos = Random.insideUnitCircle.normalized * SpawnRange;
+        Vector3 randomPos = Random.insideUnitSphere.normalized * SpawnRange;
 
         // random한 좌표 + 현재 위치 
         randomPos += player.transform.position;
@@ -101,7 +101,7 @@ public class MonsterSpawner : MonoBehaviour
         }
 
         newMonster.transform.position = randomPos;
-        newMonster.transform.rotation = Quaternion.identity;
+        newMonster.transform.LookAt(player.transform.position);
         newMonster.name = newMonster.name.Replace("(Clone)", "");
     }
 

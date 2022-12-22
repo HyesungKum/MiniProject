@@ -783,6 +783,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8482549098389809585, guid: f1df4a19437ad8648849daef1f588f1a, type: 3}
+      propertyPath: <playMode>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8482549098389809585, guid: f1df4a19437ad8648849daef1f588f1a, type: 3}
       propertyPath: <DebugConsole>k__BackingField
       value: 1
       objectReference: {fileID: 0}

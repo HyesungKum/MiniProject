@@ -126,14 +126,14 @@ public class Playable : MonoBehaviour
                     float x = KHS_Axis.Axis.GetHorizontal;
                     float z = KHS_Axis.Axis.GetVertical;
 
-                    moveDir = new Vector3(x, 0f, z).normalized;
+                    moveDir = new Vector3(-x, 0f, -z).normalized;
                     moveSpeed = LevelData[curLevel - 1].speed * this.transform.forward;
                 }
             }
         }
         #endif
         #endregion
-        this.transform.forward = moveDir;
+        this.transform.right = moveDir;
         this.transform.localPosition += moveSpeed * Time.deltaTime;
 
         #region Mobile Controll

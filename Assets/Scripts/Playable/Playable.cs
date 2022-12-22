@@ -20,7 +20,7 @@ public class Playable : MonoBehaviour
 
     [SerializeField] private AbsorbRange AbsorbRange = null;
 
-    private Vector3 moveDir = Vector3.zero;
+    private Vector3 moveDir = Vector3.forward;
 
     private void Awake()
     {
@@ -90,14 +90,17 @@ public class Playable : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
+                Debug.Log(hit.collider.name);
+                if (hit.collider.name == "RayBlock") return;
+
                 moveDir = new Vector3((hit.point.x - this.transform.position.x),0f, (hit.point.z - this.transform.position.z)).normalized;
-                moveSpeed = LevelData[curLevel - 1].speed * Time.deltaTime * this.transform.forward;
+                moveSpeed = LevelData[curLevel - 1].speed * this.transform.forward;
             }
         }
         #endif
         #endregion
         this.transform.forward = moveDir;
-        this.transform.position += moveSpeed; //Translate( moveDir);
+        this.transform.localPosition += moveSpeed * Time.deltaTime;
 
         #region Mobile Controll
 #if Moblie

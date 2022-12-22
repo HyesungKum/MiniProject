@@ -5,6 +5,12 @@ using UnityEngine;
 public class ExpItem : Absorbable
 {
     [SerializeField] int exp = 10;
+    [SerializeField] float rotSpeed = 4f;
+
+    private void Update()
+    {
+        this.transform.Rotate(0f, Time.deltaTime*rotSpeed, 0f);
+    }
 
     protected override void OnTriggerEnter(Collider other)
     {

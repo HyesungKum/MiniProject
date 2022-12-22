@@ -5,13 +5,14 @@ using UnityEngine;
 public class FollowCam : MonoBehaviour
 {
     [SerializeField] GameObject target = null;
+    [SerializeField] float followSpeed = 20f;
     private Transform targetTr = null;
 
     private void Awake()
     {
         if (target == null)
         {
-            target = FindObjectOfType<Playable>().gameObject;
+            target = GameObject.Find(nameof(Playable));
         }
         else
         {
@@ -22,6 +23,6 @@ public class FollowCam : MonoBehaviour
     private void Update()
     {
         Vector3 newPos = new Vector3(targetTr.position.x, this.transform.position.y, targetTr.position.z);
-        this.transform.position = newPos;
+        this.transform.position = Vector3.Lerp(this.transform.position, newPos, Time.deltaTime * followSpeed);
     }
 }

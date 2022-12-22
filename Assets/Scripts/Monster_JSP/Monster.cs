@@ -5,7 +5,7 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     [SerializeField] float monsterSpeed;
-    
+
     Playable player = null;
 
     string myName;
@@ -17,6 +17,7 @@ public class Monster : MonoBehaviour
         player = GameObject.FindObjectOfType<Playable>();
         monsterSpeed = 5f;
         myName = this.gameObject.name.Replace("(Clone)", "");
+
     }
 
     private void Start()
@@ -35,12 +36,20 @@ public class Monster : MonoBehaviour
         transform.Translate(monsterSpeed * Time.deltaTime * dir);
 
 
-        transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
+        //transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
 
     }
 
 
-    void DestroyMyself()
+    delegate void movingMonster(string monster);
+
+    //Vector3 monsterDir(Vector3 dir)
+    //{
+
+    //}
+
+
+    void destroyMyself()
     {
         MonsterSpawner.Inst.DestroyMonster(this.gameObject);
     }

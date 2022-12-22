@@ -78,7 +78,7 @@ public class MonsterSpawner : MonoBehaviour
         if (pooling[key].Count == 0)
         {
             // key 값의 prefab 불러오기
-            GameObject newKeyMonster = Resources.Load($"Prefabs\\{key}") as GameObject;
+            GameObject newKeyMonster = Resources.Load($"Prefabs_JSP\\{key}") as GameObject;
 
             // 생성 & list에 추가
             newMonster = Instantiate(newKeyMonster);

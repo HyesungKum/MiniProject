@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEditor;
 using UnityEngine;
+using static Monster;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -35,7 +37,7 @@ public class MonsterSpawner : MonoBehaviour
 
     // for prefab
     GameObject myMonster = null;
-    
+
     // Dictionary pooling 
     static Dictionary<string, List<GameObject>> pooling = new Dictionary<string, List<GameObject>>();
 
@@ -103,6 +105,18 @@ public class MonsterSpawner : MonoBehaviour
         newMonster.transform.position = randomPos;
         newMonster.transform.LookAt(player.transform.position);
         newMonster.name = newMonster.name.Replace("(Clone)", "");
+
+        // 생성된 몬스터의 타입 정하기
+        switch (newMonster.name)
+        {
+            case "temp_Monster1":
+                newMonster.GetComponent<Monster>().SetMonsterType = MonsterType.temp1;
+                break;
+
+            case "temp_Monster2":
+                newMonster.GetComponent<Monster>().SetMonsterType = MonsterType.temp2;
+                break;
+        }
     }
 
 
@@ -119,10 +133,8 @@ public class MonsterSpawner : MonoBehaviour
 
 
 
-
-
     private void Start()
-    {   
+    {
         // for test! 
         StartCoroutine(GenMonster(2f));
     }

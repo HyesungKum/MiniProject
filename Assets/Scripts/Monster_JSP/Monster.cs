@@ -7,7 +7,17 @@ using UnityEngine.Animations;
 public class Monster : MonoBehaviour
 {
 
-    [SerializeField] MonsterType monsterType;
+    // 몬스터 타입 
+    [SerializeField] MonsterType mobType;
+
+    public MonsterType SetMonsterType { set { mobType = value; } }
+
+    public enum MonsterType
+    {
+        temp1,
+        temp2
+    }
+
     float monsterSpeed;
 
     Playable player = null;
@@ -16,12 +26,7 @@ public class Monster : MonoBehaviour
     Vector3 myDir;
 
 
-    // enum type으로 한번 해봅시다! 
-    enum MonsterType
-    { 
-        temp1,
-        temp2
-    }
+
     void Awake()
     {
         // find player 
@@ -40,13 +45,13 @@ public class Monster : MonoBehaviour
     void Update()
     {
 
-        if (myName == "temp_Monster1")
+        if (mobType == MonsterType.temp1)
         {
             this.transform.LookAt(player.transform);
             monsterSpeed = 7f;
         }
 
-        else if (myName == "temp_Monster2")
+        else if (mobType == MonsterType.temp2)
         {
             monsterSpeed = 20f;
         }

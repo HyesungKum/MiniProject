@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4403106001630998289}
   - component: {fileID: 4403106001630998290}
   - component: {fileID: 4403106001630998291}
-  - component: {fileID: -4357743398709276700}
+  - component: {fileID: 1658407116358875956}
   m_Layer: 0
-  m_Name: temp_Monster 2
+  m_Name: temp_Monster1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 428d34e37c039b44686d8ca6138b789e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSpeed: 0
---- !u!54 &-4357743398709276700
+--- !u!54 &1658407116358875956
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

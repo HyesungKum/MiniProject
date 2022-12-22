@@ -33,17 +33,11 @@ public class MonsterSpawner : MonoBehaviour
 
     Playable player = null;
 
-
+    // for prefab
     GameObject myMonster = null;
-    Queue<GameObject> monsterPool = new Queue<GameObject>();
-
-
+    
     // Dictionary pooling 
-    Dictionary<string, List<GameObject>> pooling = new Dictionary<string, List<GameObject>>();
-
-
-
-
+    static Dictionary<string, List<GameObject>> pooling = new Dictionary<string, List<GameObject>>();
 
 
     private void Awake()
@@ -52,8 +46,6 @@ public class MonsterSpawner : MonoBehaviour
 
         MonsterSpawnTime = 2f;
         SpawnRange = 20f;
-
-        myMonster = Resources.Load("temp_monster", typeof(GameObject)) as GameObject;
     }
 
 
@@ -63,7 +55,7 @@ public class MonsterSpawner : MonoBehaviour
         GameObject newMonster = null;
 
         // circle의 random한 좌표값 생성 + spawn range 
-        Vector3 randomPos = Random.insideUnitCircle * SpawnRange;
+        Vector3 randomPos = Random.insideUnitCircle.normalized * SpawnRange;
 
         // random한 좌표 + 현재 위치 
         randomPos += player.transform.position;
@@ -71,14 +63,14 @@ public class MonsterSpawner : MonoBehaviour
 
 
         // pooling에 해당 key 값이 없다면 새 List 생성
-        if (pooling.ContainsKey(key.ToString()))
+        if (!pooling.ContainsKey(key))
         {
 
             // 새 리스트 생성
             List<GameObject> monster = new List<GameObject>();
 
             // 해당 key의 새로운 리스트 추가
-            pooling.Add(key.ToString(), monster);
+            pooling.Add(key, monster);
         }
 
 
@@ -86,26 +78,27 @@ public class MonsterSpawner : MonoBehaviour
         if (pooling[key].Count == 0)
         {
             // key 값의 prefab 불러오기
-            GameObject newKeyMonster = Resources.Load($"Prefabs/{key.ToString()}") as GameObject;
+            GameObject newKeyMonster = Resources.Load($"Prefabs\\{key}") as GameObject;
 
             // 생성 & list에 추가
-            newMonster = Instantiate(myMonster);
-            pooling[key].Add(newKeyMonster);
+            newMonster = Instantiate(newKeyMonster);
+            Debug.Log("생성!");
         }
 
         else
         {
             foreach (GameObject monster in pooling[key])
             {
-                // 비활성화되었다면
+                // 비활성화된 오브젝트가 있다면
                 if (!monster.activeSelf)
                 {
                     monster.SetActive(true);
                     newMonster = monster;
+                    pooling[key].Remove(monster);
+                    break;
                 }
             }
         }
-
 
         newMonster.transform.position = randomPos;
         newMonster.transform.rotation = Quaternion.identity;
@@ -115,64 +108,49 @@ public class MonsterSpawner : MonoBehaviour
 
 
     // Destroy monster 
-
-
-
-
-
-
-
-
-
-
-
-
-    // === for test ===
-
-/*
-    IEnumerator GenerateMonster(float delayTime)
-    {
-
-        yield return new WaitForSeconds(delayTime);
-
-        while (true)
-        {
-            GameObject newMonster = null;
-
-            // circle의 random한 좌표값 생성 + spawn range 
-            Vector3 randomPos = Random.insideUnitCircle * SpawnRange;
-
-            // random한 좌표 + 현재 위치 
-            randomPos += player.transform.position;
-            randomPos.y = 0.5f;
-
-
-            if (monsterPool.Count == 0)
-            {
-                newMonster = Instantiate(myMonster);
-
-                newMonster.name = newMonster.name.Replace("(Clone)", "");
-            }
-
-            else
-            {
-                // pool에서 하나 꺼내 온다 
-                newMonster = monsterPool.Dequeue();
-                newMonster.SetActive(true);
-            }
-
-            newMonster.transform.position = randomPos;
-            newMonster.transform.rotation = Quaternion.identity;
-            yield return new WaitForSeconds(MonsterSpawnTime);
-        }
-    }
-
-
     public void DestroyMonster(GameObject monster)
     {
+        string key = monster.name.ToString();
+
         monster.SetActive(false);
-        monsterPool.Enqueue(monster);
+
+        pooling[key].Add(monster);
     }
 
-    */
+
+
+
+
+    private void Start()
+    {   
+        // for test! 
+        StartCoroutine(GenMonster(2f));
+    }
+
+
+    // for test! 
+    IEnumerator GenMonster(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        int count = 0;
+        while (true)
+        {
+
+            if (count <= 4)
+            {
+                BringObject("temp_Monster1");
+            }
+
+            else if (count > 4)
+            {
+                BringObject("temp_Monster2");
+            }
+
+            count++;
+
+            yield return new WaitForSeconds(2f);
+        }
+
+    }
 }

@@ -20,6 +20,8 @@ public class Playable : MonoBehaviour
 
     [SerializeField] private AbsorbRange AbsorbRange = null;
 
+    private Vector3 moveDir = Vector3.zero;
+
     private void Awake()
     {
         SetPCParameter(1);
@@ -55,6 +57,7 @@ public class Playable : MonoBehaviour
         Debug.Log($"================================================="     );
         #endregion
     }
+    //========================parameter controll====================================
     /// <summary>
     /// setting pc parameter used level
     /// setting upper level out of index, will be return this function
@@ -77,7 +80,7 @@ public class Playable : MonoBehaviour
     }
     public void MoveControll()
     {
-        Vector3 moveDir = Vector3.zero;
+        Vector3 moveSpeed = Vector3.zero;
 
         #region PC Controll
         #if PC
@@ -88,11 +91,13 @@ public class Playable : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 moveDir = new Vector3((hit.point.x - this.transform.position.x),0f, (hit.point.z - this.transform.position.z)).normalized;
+                moveSpeed = LevelData[curLevel - 1].speed * Time.deltaTime * this.transform.forward;
             }
         }
         #endif
         #endregion
-        this.transform.Translate(LevelData[curLevel-1].speed * Time.deltaTime * moveDir);
+        this.transform.forward = moveDir;
+        this.transform.position += moveSpeed; //Translate( moveDir);
 
         #region Mobile Controll
 #if Moblie
@@ -120,6 +125,7 @@ public class Playable : MonoBehaviour
         AbsorbRange.Collider.radius = curDrop;
     }
 
+    //========================Message==================================
     public void GetExp(int value)
     {
         curExp += value;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KHS_Axis;
+using Unity.VisualScripting;
 
 public class Playable : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class Playable : MonoBehaviour
     //==============================inner variables===========================
     private Vector3 moveDir = Vector3.forward;
     private float AttackTimer = 0f;
+    private float HitTimer = 0f;
 
 
     private void Awake()
@@ -53,9 +55,10 @@ public class Playable : MonoBehaviour
 
     void Update()
     {
-        MoveControll();
-        ExpControll();
-        AttackControll();
+        MoveCtl();
+        ExpCtl();
+        AttackCtl();
+        HealthCtl();
 
         #region debug
 #if UNITY_EDITOR
@@ -107,7 +110,7 @@ public class Playable : MonoBehaviour
         curHeal     = LevelData[level].heal;
         curDrop     = LevelData[level].drop;
     }
-    public void MoveControll()
+    public void MoveCtl()
     {
         Vector3 moveSpeed = Vector3.zero;
 
@@ -153,7 +156,7 @@ public class Playable : MonoBehaviour
 #endif
         #endregion
     }
-    public void ExpControll() //need call event 
+    public void ExpCtl() //need call event 
     {
         if (LevelData[curLevel].maxExp == 0) return;
 
@@ -166,18 +169,41 @@ public class Playable : MonoBehaviour
             curExp = 0;
         }
     }
-    public void DropRangeControll()
+    public void DropRangeCtl()
     {
         AbsorbRange.Collider.radius = curDrop;
     }
-    public void AttackControll()
+    public void AttackCtl()
     {
-        AttackTimer += Time.deltaTime;
-
-        if (AttackTimer >= 1f)
+        if (Timer(ref AttackTimer, 1f))
         {
-            AttackTimer = 0f;
             Instantiate(weaponPrefabs, this.transform.position, Quaternion.LookRotation(moveDir));
+            //오브젝트 풀링 반환 형태 필요
+        }
+    }
+    public void HealthCtl()
+    {
+        if (curHp <= 0) MonsterSpawner.Inst.DestroyMonster(this.gameObject);
+    }
+
+    //=======================Inner function===========================
+    /// <summary>
+    /// timer for interval true return
+    /// </summary>
+    /// <param name="timeSource"> using timer </param>
+    /// <param name="refreshTime"> refresh time limit </param>
+    /// <returns>if timer value has higher than refresh time will be ture</returns>
+    public bool Timer(ref float timeSource, float refreshTime)
+    {
+        timeSource += Time.deltaTime;
+        if (timeSource >= refreshTime)
+        {
+            timeSource = 0f;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -186,4 +212,14 @@ public class Playable : MonoBehaviour
     {
         curExp += value;
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.name.Split("Monster").Length == 2)
+        {
+            if (Timer(ref HitTimer, 1f))
+                curHp -= 10;
+        }
+    }
+
 }

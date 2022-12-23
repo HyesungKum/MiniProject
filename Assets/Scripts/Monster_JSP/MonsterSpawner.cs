@@ -57,7 +57,7 @@ public class MonsterSpawner : MonoBehaviour
             while (count > 0)
             {
                 // object pool에 몬스터 생성 요청
-                GameObject newMob = ObjectPool.Inst.BringObject($"temp_Monster{mobTypeNum}");
+                GameObject newMob = ObjectPool.Inst.BringObject(null);
 
                 newMob.transform.position = randomPos;
                 newMob.transform.LookAt(player.transform);

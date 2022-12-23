@@ -71,7 +71,7 @@ public class Monster : MonoBehaviour
     {
         // ���� ��� ��ġ�� ������ ���� 
         // onDisable �� ������ ���� ��û�� �ϸ� ���� �޼��� ���� 
-        ObjectPool.Inst.BringObject("expItem").transform.position = this.transform.position;
+        ObjectPool.Inst.BringObject(expItem).transform.position = this.transform.position;
 
         // ���͸� Ǯ�� �ִ´�
         ObjectPool.Inst.DestroyObject(this.gameObject);

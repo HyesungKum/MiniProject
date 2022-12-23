@@ -35,8 +35,6 @@ public class Monster : MonoBehaviour
 
     private void OnEnable()
     {
-        // for test! disable after 5 sec
-        //Invoke("destroyMyself", 5f);
         transform.LookAt(player.transform.position);
 
         MonsterHP = 3;
@@ -61,23 +59,23 @@ public class Monster : MonoBehaviour
 
         else if (mobType == MonsterType.temp2)
         {
-            monsterSpeed = 5;
+            monsterSpeed = 10;
         }
 
         transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
     }
 
-    // 몬스터를 풀에 넣는다
+    // monster 주금 관련====================================================================
+
     void destroyMyself()
     {
-        MonsterSpawner.Inst.DestroyMonster(this.gameObject);
-    }
+        // 몬스터 사망 위치에 아이템 생성 
+        // onDisable 때 아이템 생성 요청을 하면 오류 메세지 나옴 
+        ObjectPool.Inst.BringObject("expItem").transform.position = this.transform.position;
 
-    private void OnDisable()
-    {
-        MonsterSpawner.Inst.BringObject("expItem");
+        // 몬스터를 풀에 넣는다
+        ObjectPool.Inst.DestroyObject(this.gameObject);
     }
-
 
     // monster damage 관련====================================================================
 
@@ -85,7 +83,5 @@ public class Monster : MonoBehaviour
     {
         MonsterHP -= damage;
     }
-
-    // monster damage 관련====================================================================
 
 }

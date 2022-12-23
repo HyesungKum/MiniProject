@@ -37,6 +37,8 @@ public class Monster : MonoBehaviour
         // for test! disable after 5 sec
         Invoke("destroyMyself", 5f);
         transform.LookAt(player.transform.position);
+
+        MonsterHP = 3;
     }
 
     void Update()
@@ -75,13 +77,12 @@ public class Monster : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // weapon에 닿았을 경우 몬스터 체력 감소
-        if (collision.collider.tag == "Weapon")
+        if (collision.collider.gameObject.name == "Weapon")
         {
             //MonsterHP -= collision.gameObject.GetComponent<Weapon>().damage;
             MonsterHP--;
         }
     }
-
     // monster damage 관련====================================================================
 
 }

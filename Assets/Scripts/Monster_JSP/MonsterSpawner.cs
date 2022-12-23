@@ -49,11 +49,11 @@ public class MonsterSpawner : MonoBehaviour
         player = GameObject.FindObjectOfType<Playable>();
 
         MonsterSpawnTime = 2f;
-        SpawnRange = 20f;
+        SpawnRange = 30f;
     }
 
 
-    // Generate monster
+    // Generate monster==============================================================================
     public void BringObject(string key)
     {
         float count = Mathf.Pow(num, num) * num;
@@ -61,15 +61,15 @@ public class MonsterSpawner : MonoBehaviour
         GameObject newMonster = null;
 
         // circle의 random한 좌표값 생성 + spawn range 
-        Vector3 randomPos = Random.insideUnitSphere.normalized * SpawnRange;
+        Vector3 randomPos = Random.insideUnitSphere.normalized;
+        randomPos *= SpawnRange;
 
         // random한 좌표 + 현재 위치 
         randomPos += player.transform.position;
         randomPos.y = 0.5f;
 
-        
         // 몬스터 타입에 따라. 생성되는 몬스터 수
-        while(count > 0)
+        while (count > 0)
         {
             // pooling에 해당 key 값이 없다면 새 List 생성
             if (!pooling.ContainsKey(key))
@@ -91,7 +91,6 @@ public class MonsterSpawner : MonoBehaviour
 
                 // 생성 & list에 추가
                 newMonster = Instantiate(newKeyMonster);
-                Debug.Log("생성!");
             }
 
             else
@@ -113,9 +112,6 @@ public class MonsterSpawner : MonoBehaviour
             newMonster.transform.position = randomPos;
             newMonster.transform.LookAt(player.transform);
 
-            // 일단.. 처음 생성되는 오브젝트 중심으로 좌우에 총 8개 생성.. 
-            newMonster.transform.position += newMonster.transform.right * (count - 4f) * 2;
-
             newMonster.name = newMonster.name.Replace("(Clone)", "");
 
             // 생성된 몬스터의 타입 정하기
@@ -126,28 +122,44 @@ public class MonsterSpawner : MonoBehaviour
                     break;
 
                 case "temp_Monster2":
-                    newMonster.GetComponent<Monster>().SetMonsterType = MonsterType.temp2;
+                    {
+                        newMonster.GetComponent<Monster>().SetMonsterType = MonsterType.temp2;
+
+                        // 일단.. 처음 생성되는 오브젝트 중심으로 좌우에 총 8개 생성.. 
+                        newMonster.transform.position += newMonster.transform.right * (count - 4f) * 2;
+                    }
                     break;
             }
 
             count--;
-
-            Debug.Log("나의 위치! " + newMonster.transform.position);
-
         }
     }
 
+    // Generate monster==============================================================================
 
 
-    // Destroy monster 
+
+    // Destroy monster==============================================================================
     public void DestroyMonster(GameObject monster)
     {
+        // key 값 == 몬스터 이름
         string key = monster.name.ToString();
+
+        // pooling에 해당 key 값이 없다면 새 List 생성
+        if (!pooling.ContainsKey(key))
+        {
+            // 새 리스트 생성
+            List<GameObject> newObjectList = new List<GameObject>();
+
+            // 해당 key의 새로운 리스트 추가
+            pooling.Add(key, newObjectList);
+        }
 
         monster.SetActive(false);
 
         pooling[key].Add(monster);
     }
+    // Destroy monster==============================================================================
 
 
 

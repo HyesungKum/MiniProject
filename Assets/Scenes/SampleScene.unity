@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9a9c6056bf1b2c468907051d070b303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MonsterSpawnTime: 2
-  SpawnRange: 50
+  MonsterSpawnTime: 0
+  SpawnRange: 0
 --- !u!4 &675993435
 Transform:
   m_ObjectHideFlags: 0
@@ -339,7 +339,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.39969832, y: 0.38288504, z: -0.18865648, w: 0.81120217}
+  m_LocalRotation: {x: 0.39969835, y: 0.38288507, z: -0.1886565, w: 0.8112022}
   m_LocalPosition: {x: 16.81, y: 30.84, z: 17.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

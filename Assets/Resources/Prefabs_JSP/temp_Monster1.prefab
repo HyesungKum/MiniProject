@@ -111,7 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f76da00f19b9494388a589a2a500b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mobType: 0
+  MonsterHP: 0
   monsterSpeed: 0
+  expItem: {fileID: 4221629810381538053, guid: 99abd9c632560224e873f6e375ef2356, type: 3}
 --- !u!54 &1658407116358875956
 Rigidbody:
   m_ObjectHideFlags: 0

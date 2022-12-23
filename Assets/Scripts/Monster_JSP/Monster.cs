@@ -10,9 +10,10 @@ public class Monster : MonoBehaviour
     // 몬스터 타입 
     [Header("Monster Info")]
     [SerializeField] MonsterType mobType;
-    [SerializeField] int MonsterHP;
+    [SerializeField] float MonsterHP;
     [SerializeField] int monsterSpeed;
 
+    [SerializeField] GameObject expItem;
 
     public MonsterType SetMonsterType { set { mobType = value; } }
 
@@ -35,7 +36,7 @@ public class Monster : MonoBehaviour
     private void OnEnable()
     {
         // for test! disable after 5 sec
-        Invoke("destroyMyself", 5f);
+        //Invoke("destroyMyself", 5f);
         transform.LookAt(player.transform.position);
 
         MonsterHP = 3;
@@ -45,7 +46,7 @@ public class Monster : MonoBehaviour
     {
         // HP가 0이되면 파괘 
         if (MonsterHP <= 0)
-        { 
+        {
             destroyMyself();
             return;
         }
@@ -55,12 +56,12 @@ public class Monster : MonoBehaviour
         if (mobType == MonsterType.temp1)
         {
             this.transform.LookAt(player.transform);
-            monsterSpeed = 7;
+            monsterSpeed = 2;
         }
 
         else if (mobType == MonsterType.temp2)
         {
-            monsterSpeed = 20;
+            monsterSpeed = 5;
         }
 
         transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
@@ -72,17 +73,19 @@ public class Monster : MonoBehaviour
         MonsterSpawner.Inst.DestroyMonster(this.gameObject);
     }
 
+    private void OnDisable()
+    {
+        MonsterSpawner.Inst.BringObject("expItem");
+    }
+
 
     // monster damage 관련====================================================================
-    private void OnCollisionEnter(Collision collision)
+
+    public void Damage(float damage)
     {
-        // weapon에 닿았을 경우 몬스터 체력 감소
-        if (collision.collider.gameObject.name == "Weapon")
-        {
-            //MonsterHP -= collision.gameObject.GetComponent<Weapon>().damage;
-            MonsterHP--;
-        }
+        MonsterHP -= damage;
     }
+
     // monster damage 관련====================================================================
 
 }

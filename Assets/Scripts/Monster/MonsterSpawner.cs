@@ -46,8 +46,8 @@ public class MonsterSpawner : MonoBehaviour
 
 
             // find random type of monster prefab 
-            GameObject monster1 = Resources.Load($"Prefabs_JSP\\temp_Monster1") as GameObject;
-            GameObject monster2 = Resources.Load($"Prefabs_JSP\\temp_Monster2") as GameObject;
+            GameObject monster1 = Resources.Load($"Prefabs\\MonsterPrefabs\\temp_Monster1") as GameObject;
+            GameObject monster2 = Resources.Load($"Prefabs\\MonsterPrefabs\\temp_Monster2") as GameObject;
 
             // to gen multiple mobs
             float count = Mathf.Pow(mobTypeNum, mobTypeNum) * mobTypeNum;

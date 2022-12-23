@@ -3,38 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Monster;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool : MonoSingleTon<ObjectPool>
 {
-    #region Singleton
-    static ObjectPool inst = null;
-
-    static public ObjectPool Inst
-    {
-        get
-        {
-            if (inst == null)
-            {
-                inst = GameObject.FindObjectOfType<ObjectPool>();
-
-                if (inst == null)
-                {
-                    inst = new GameObject("ObjectPool").AddComponent<ObjectPool>();
-                }
-            }
-            return inst;
-        }
-    }
-    #endregion
-
-
     // Dictionary pooling 
     static Dictionary<string, List<GameObject>> pooling = new Dictionary<string, List<GameObject>>();
 
 
-    public GameObject BringObject(GameObject targetObject)
+    public GameObject BringObject(GameObject targetObj)
     {
-        // key 값 == 오프젝트 이름
-        string key = targetObject.name.ToString();
+        string key = targetObj.name.ToString();
 
         GameObject newObject = null;
 
@@ -52,7 +29,7 @@ public class ObjectPool : MonoBehaviour
         if (pooling[key].Count == 0)
         {
             // 생성 & list에 추가
-            newObject = Instantiate(targetObject);
+            newObject = Instantiate(targetObj);
         }
 
         else

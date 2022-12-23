@@ -178,8 +178,8 @@ public class Playable : MonoBehaviour
     {
         if (Timer(ref AttackTimer, 1f))
         {
-            Instantiate(weaponPrefabs, this.transform.position, Quaternion.LookRotation(moveDir));
-            //오브젝트 풀링 반환 형태 필요
+            GameObject instObj = ObjectPool.Inst.BringObject(weaponPrefabs);
+            instObj.transform.SetPositionAndRotation(this.transform.position, Quaternion.LookRotation(moveDir));
         }
     }
     public void HealthCtl()

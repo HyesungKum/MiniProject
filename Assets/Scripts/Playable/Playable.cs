@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KHS_Axis;
+using Unity.VisualScripting;
 
 public class Playable : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class Playable : MonoBehaviour
     }
     [field: SerializeField] PlayMode playMode { get; set; }
 
-    //==========================level data sheet
+    //==========================level data sheet==============================
+    [Header("Parameter")]
     [SerializeField] PC_LevelData[] LevelData = null;
 
     //======================current player data scope==========================
@@ -33,9 +35,17 @@ public class Playable : MonoBehaviour
     [field: SerializeField] int curExp { get; set; }
 
     //=========================================================================
+    [Header("Weapon")]
+    [SerializeField] GameObject weaponPrefabs = null;
+
+    [Header("Getting Range")]
     [SerializeField] private AbsorbRange AbsorbRange = null;
 
+    //==============================inner variables===========================
     private Vector3 moveDir = Vector3.forward;
+    private float AttackTimer = 0f;
+    private float HitTimer = 0f;
+
 
     private void Awake()
     {
@@ -45,11 +55,13 @@ public class Playable : MonoBehaviour
 
     void Update()
     {
-        MoveControll();
-        ExpControll();
+        MoveCtl();
+        ExpCtl();
+        AttackCtl();
+        HealthCtl();
 
         #region debug
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (DebugConsole)
         {
             if (Input.GetKeyDown(KeyCode.U))
@@ -77,7 +89,7 @@ public class Playable : MonoBehaviour
         #endif
         #endregion
     }
-    //========================parameter controll====================================
+    //======================== controll====================================
     /// <summary>
     /// setting pc parameter used level
     /// setting upper level out of index, will be return this function
@@ -98,7 +110,7 @@ public class Playable : MonoBehaviour
         curHeal     = LevelData[level].heal;
         curDrop     = LevelData[level].drop;
     }
-    public void MoveControll()
+    public void MoveCtl()
     {
         Vector3 moveSpeed = Vector3.zero;
 
@@ -144,12 +156,13 @@ public class Playable : MonoBehaviour
 #endif
         #endregion
     }
-    public void ExpControll() //need call event 
+    public void ExpCtl() //need call event 
     {
         if (LevelData[curLevel].maxExp == 0) return;
 
         if (curExp >= LevelData[curLevel-1].maxExp)
         {
+            
             curLevel++;
 
             SetPCParameter(curLevel);
@@ -157,9 +170,42 @@ public class Playable : MonoBehaviour
             curExp = 0;
         }
     }
-    public void DropRangeControll()
+    public void DropRangeCtl()
     {
         AbsorbRange.Collider.radius = curDrop;
+    }
+    public void AttackCtl()
+    {
+        if (Timer(ref AttackTimer, 1f))
+        {
+            GameObject instObj = ObjectPool.Inst.BringObject(weaponPrefabs);
+            instObj.transform.SetPositionAndRotation(this.transform.position, Quaternion.LookRotation(moveDir));
+        }
+    }
+    public void HealthCtl()
+    {
+        if (curHp <= 0) ObjectPool.Inst.DestroyObject(this.gameObject);
+    }
+
+    //=======================Inner function===========================
+    /// <summary>
+    /// timer for interval true return
+    /// </summary>
+    /// <param name="timeSource"> using timer </param>
+    /// <param name="refreshTime"> refresh time limit </param>
+    /// <returns>if timer value has higher than refresh time will be ture</returns>
+    public bool Timer(ref float timeSource, float refreshTime)
+    {
+        timeSource += Time.deltaTime;
+        if (timeSource >= refreshTime)
+        {
+            timeSource = 0f;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //========================Message==================================
@@ -167,4 +213,14 @@ public class Playable : MonoBehaviour
     {
         curExp += value;
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.name.Split("Monster").Length == 2)
+        {
+            if (Timer(ref HitTimer, 1f))
+                curHp -= 10;
+        }
+    }
+
 }

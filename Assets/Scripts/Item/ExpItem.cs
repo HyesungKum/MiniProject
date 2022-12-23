@@ -17,7 +17,7 @@ public class ExpItem : Absorbable
         if (other.name == nameof(Playable))
         {
             other.SendMessage("GetExp", exp, SendMessageOptions.DontRequireReceiver);
-            Destroy(this.gameObject);
+            ObjectPool.Inst.DestroyObject(this.gameObject);
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.Animations;
 public class Monster : MonoBehaviour
 {
 
-    // ¸ó½ºÅÍ Å¸ÀÔ 
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ 
     [Header("Monster Info")]
     [SerializeField] MonsterType mobType;
     [SerializeField] float MonsterHP;
@@ -23,7 +23,7 @@ public class Monster : MonoBehaviour
         temp2 = 8
     }
 
-    // player À§Ä¡È®ÀÎÀ» À§ÇØ
+    // player ï¿½ï¿½Ä¡È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     Playable player = null;
 
 
@@ -35,8 +35,6 @@ public class Monster : MonoBehaviour
 
     private void OnEnable()
     {
-        // for test! disable after 5 sec
-        //Invoke("destroyMyself", 5f);
         transform.LookAt(player.transform.position);
 
         MonsterHP = 3;
@@ -44,7 +42,7 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
-        // HP°¡ 0ÀÌµÇ¸é ÆÄ±¥ 
+        // HPï¿½ï¿½ 0ï¿½ÌµÇ¸ï¿½ ï¿½Ä±ï¿½ 
         if (MonsterHP <= 0)
         {
             destroyMyself();
@@ -52,7 +50,7 @@ public class Monster : MonoBehaviour
         }
 
 
-        // ¸ó½ºÅÍ Å¸ÀÔ¿¡ µû¸¥ ÀÌµ¿ ¼Óµµ ¹× ¹æÇâ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½Óµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (mobType == MonsterType.temp1)
         {
             this.transform.LookAt(player.transform);
@@ -61,31 +59,29 @@ public class Monster : MonoBehaviour
 
         else if (mobType == MonsterType.temp2)
         {
-            monsterSpeed = 5;
+            monsterSpeed = 10;
         }
 
         transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
     }
 
-    // ¸ó½ºÅÍ¸¦ Ç®¿¡ ³Ö´Â´Ù
+    // monster ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½====================================================================
+
     void destroyMyself()
     {
-        MonsterSpawner.Inst.DestroyMonster(this.gameObject);
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        // onDisable ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        ObjectPool.Inst.BringObject("expItem").transform.position = this.transform.position;
+
+        // ï¿½ï¿½ï¿½Í¸ï¿½ Ç®ï¿½ï¿½ ï¿½Ö´Â´ï¿½
+        ObjectPool.Inst.DestroyObject(this.gameObject);
     }
 
-    private void OnDisable()
-    {
-        Instantiate(expItem, this.transform.position, Quaternion.identity);
-    }
-
-
-    // monster damage °ü·Ã====================================================================
+    // monster damage ï¿½ï¿½ï¿½ï¿½====================================================================
 
     public void Damage(float damage)
     {
         MonsterHP -= damage;
     }
-
-    // monster damage °ü·Ã====================================================================
 
 }

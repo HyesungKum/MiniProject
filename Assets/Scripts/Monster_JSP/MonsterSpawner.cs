@@ -4,13 +4,15 @@ using System.Net.Http.Headers;
 using System.Threading;
 using UnityEditor;
 using UnityEngine;
-using static Monster;
+using UnityEngine.Rendering.PostProcessing;
 
 public class MonsterSpawner : MonoBehaviour
 {
 
     [SerializeField] float MonsterSpawnTime;
     [SerializeField] float SpawnRange;
+    [SerializeField]
+    Monster[] monsters;
 
     Playable player = null;
 
@@ -39,52 +41,59 @@ public class MonsterSpawner : MonoBehaviour
 
         while (true)
         {
-            // 랜덤한 몬스터 타입이 나올 수 있도록. 
+            // to gen random monster type
             mobTypeNum = Random.Range(1, 3);
 
-            // temp code, 군집 몬스터 8마리 소환을 위한 코드 
+
+            // find random type of monster prefab 
+            GameObject monster1 = Resources.Load($"Prefabs_JSP\\temp_Monster1") as GameObject;
+            GameObject monster2 = Resources.Load($"Prefabs_JSP\\temp_Monster2") as GameObject;
+
+            // to gen multiple mobs
             float count = Mathf.Pow(mobTypeNum, mobTypeNum) * mobTypeNum;
 
-            // circle의 random한 좌표값 생성 + spawn range 
+            // get random point around player 
             Vector3 randomPos = Random.insideUnitSphere.normalized;
             randomPos *= SpawnRange;
 
-            // random한 좌표 + 타겟 위치 
+            // random pos + target pos
             randomPos += player.transform.position;
             randomPos.y = 0.5f;
 
-            // 몬스터 타입에 따라. 생성되는 몬스터 수
             while (count > 0)
             {
-                // object pool에 몬스터 생성 요청
-                GameObject newMob = ObjectPool.Inst.BringObject(null);
+                GameObject newMob = null;
 
-                newMob.transform.position = randomPos;
-                newMob.transform.LookAt(player.transform);
-
-                // 생성된 몬스터의 타입 정하기
+                // set monster type
                 switch (mobTypeNum)
                 {
                     // type 1 mob
                     case 1:
-                        newMob.GetComponent<Monster>().SetMonsterType = MonsterType.temp1;
+                        newMob = ObjectPool.Inst.BringObject(monster1);
+                        newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp1;
+                        newMob.transform.position = randomPos;
+                        newMob.transform.LookAt(player.transform);
                         break;
 
                     // type 2 mob
                     case 2:
                         {
-                            newMob.GetComponent<Monster>().SetMonsterType = MonsterType.temp2;
-
-                            // 일단.. 처음 생성되는 오브젝트 중심으로 좌우에 총 8개 생성.. 
-                            newMob.transform.position += newMob.transform.right * (count - 4f) * 2;
+                            newMob = ObjectPool.Inst.BringObject(monster2);
+                            newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp2;
+                                                      
+                            newMob.transform.position = randomPos;
+                            newMob.transform.LookAt(player.transform);
+                            newMob.transform.position += newMob.transform.right * (count * 1.5f - 4f) * 2;
                         }
                         break;
                 }
 
+
+
                 count--;
             }
 
-            // 몬스터 스폰 시간 만큼 대기
+            // wait for spawn interval 
             yield return new WaitForSeconds(MonsterSpawnTime);
         }
 

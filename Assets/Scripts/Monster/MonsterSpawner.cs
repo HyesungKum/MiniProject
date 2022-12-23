@@ -80,7 +80,7 @@ public class MonsterSpawner : MonoBehaviour
                             newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp2;
                             newMob.transform.position = randomPos;
                             newMob.transform.LookAt(player.transform);
-                            newMob.transform.position += Vector3.left * (count * 1.5f - 6) * 2;
+                            newMob.transform.position += newMob.transform.right * (count * 1.5f - 4f) * 2;
                         }
                         break;
                 }

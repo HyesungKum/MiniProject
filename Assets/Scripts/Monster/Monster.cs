@@ -37,8 +37,6 @@ public class Monster : MonoBehaviour
         transform.LookAt(player.transform.position);
 
         MonsterHP = 3;
-
-        Invoke("goWay", 8f);
     }
 
     void Update()
@@ -50,17 +48,22 @@ public class Monster : MonoBehaviour
             return;
         }
 
+        if (Vector3.Distance(this.transform.position, player.transform.position) > 30)
+        {
+            goWay();
+            return;
+        }
 
 
         if (mobType == MonsterType.temp1)
         {
             this.transform.LookAt(player.transform);
-            monsterSpeed = 2;
+            monsterSpeed = 5;
         }
 
         else if (mobType == MonsterType.temp2)
         {
-            monsterSpeed = 10;
+            monsterSpeed = 15;
         }
 
         transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);

@@ -620,7 +620,6 @@ MonoBehaviour:
   monsters:
   - {fileID: 4403106001630998292, guid: f8876503aef8e1d40ad832274a5c62b4, type: 3}
   - {fileID: 4403106001630998292, guid: f69ea364f5ee22243adbfdc6078d7500, type: 3}
-  - {fileID: 4403106001630998292, guid: f69ea364f5ee22243adbfdc6078d7500, type: 3}
 --- !u!4 &2098297126
 Transform:
   m_ObjectHideFlags: 0

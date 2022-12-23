@@ -23,7 +23,7 @@ public class MonsterSpawner : MonoBehaviour
         player = GameObject.FindObjectOfType<Playable>();
 
         MonsterSpawnTime = 2f;
-        SpawnRange = 30f;
+        SpawnRange = 20f;
     }
 
 
@@ -44,10 +44,8 @@ public class MonsterSpawner : MonoBehaviour
             // to gen random monster type
             mobTypeNum = Random.Range(0, 2);
 
-            Debug.Log(monsters[mobTypeNum].name);
-
             // to gen multiple mobs
-            float count = Mathf.Pow(mobTypeNum + 1, 3);
+            float count = Mathf.Pow(mobTypeNum + 1, 4);
 
             // get random point around player 
             Vector3 randomPos = Random.insideUnitSphere.normalized;
@@ -59,7 +57,6 @@ public class MonsterSpawner : MonoBehaviour
 
             while (count > 0)
             {
-
                 GameObject newMob = null;
 
                 // set monster type
@@ -72,22 +69,21 @@ public class MonsterSpawner : MonoBehaviour
                         newMob.transform.position = randomPos;
                         newMob.transform.LookAt(player.transform);
                         break;
-
+                        
                     // type 2 mob
                     case 1:
                         {
                             newMob = ObjectPool.Inst.BringObject(monsters[mobTypeNum]);
                             newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp2;
-                            newMob.transform.position = randomPos;
+
+                            newMob.transform.position = player.transform.forward * -20;
                             newMob.transform.LookAt(player.transform);
-                            newMob.transform.position += newMob.transform.right * (count * 1.5f - 4f) * 2;
+                            newMob.transform.position += newMob.transform.right * (count * 1.5f -6f);
                         }
                         break;
                 }
-
                 count--;
             }
-
             // wait for spawn interval 
             yield return new WaitForSeconds(MonsterSpawnTime);
         }

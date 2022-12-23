@@ -3,30 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Monster;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool : MonoSingleTon<ObjectPool>
 {
-    #region Singleton
-    static ObjectPool inst = null;
-
-    static public ObjectPool Inst
-    {
-        get
-        {
-            if (inst == null)
-            {
-                inst = GameObject.FindObjectOfType<ObjectPool>();
-
-                if (inst == null)
-                {
-                    inst = new GameObject("ObjectPool").AddComponent<ObjectPool>();
-                }
-            }
-            return inst;
-        }
-    }
-    #endregion
-
-
     // Dictionary pooling 
     static Dictionary<string, List<GameObject>> pooling = new Dictionary<string, List<GameObject>>();
 

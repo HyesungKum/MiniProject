@@ -617,6 +617,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MonsterSpawnTime: 6
   SpawnRange: 20
+  monsters:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &2098297126
 Transform:
   m_ObjectHideFlags: 0

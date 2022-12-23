@@ -25,4 +25,3 @@ public class MonoSingleTon<T> : MonoBehaviour where T : class, new()
         }
     }
 }
-}

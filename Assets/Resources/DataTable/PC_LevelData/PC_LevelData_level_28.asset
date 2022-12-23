@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: { fileID: 11500000, guid: 8d0df4a50cd71d441bfbcfae53c32c61, type: 3}
+  m_Script: { fileID: 11500000, guid: 4728bbb0b9ba8ef47bf8546110293c06, type: 3}
   m_Name: PC_LevelData_level_28
   m_EditorClassIdentifier:
   level: 28
@@ -20,4 +20,4 @@ MonoBehaviour:
   atkSpeed: 1
   heal: 0
   drop: 5
-  exp: 692
+  maxExp: 692

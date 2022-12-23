@@ -13,4 +13,6 @@ public class DataSheet : ScriptableObject
      public float heal = 0f;
      public int drop = 0;
      public int exp = 0;
+    public int[] aa = new int[3];
+    public List<int> aaList = new List<int>();
 }

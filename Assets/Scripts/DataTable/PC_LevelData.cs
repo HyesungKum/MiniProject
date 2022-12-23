@@ -12,5 +12,5 @@ public class PC_LevelData : ScriptableObject
      public float atkSpeed = 0f;
      public float heal = 0f;
      public int drop = 0;
-     public int exp = 0;
+     public int maxExp = 0;
 }

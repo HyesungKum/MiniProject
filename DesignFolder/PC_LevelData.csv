@@ -1,5 +1,5 @@
 int,float,int,int,int,float,float,int,int
-level,hp,atk,def,speed,atkSpeed,heal,drop,exp
+level,hp,atk,def,speed,atkSpeed,heal,drop,maxExp
 1,100,5,1,10,1,0,5,10
 2,115,6,1,10,1,0,5,25
 3,130,7,1,10,1,0,5,50

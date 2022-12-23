@@ -12,7 +12,7 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] float MonsterSpawnTime;
     [SerializeField] float SpawnRange;
     [SerializeField]
-    Monster[] monsters;
+    GameObject[] monsters;
 
     Playable player = null;
 
@@ -42,15 +42,12 @@ public class MonsterSpawner : MonoBehaviour
         while (true)
         {
             // to gen random monster type
-            mobTypeNum = Random.Range(1, 3);
+            mobTypeNum = Random.Range(0, 2);
 
-
-            // find random type of monster prefab 
-            GameObject monster1 = Resources.Load($"Prefabs\\MonsterPrefabs\\temp_Monster1") as GameObject;
-            GameObject monster2 = Resources.Load($"Prefabs\\MonsterPrefabs\\temp_Monster2") as GameObject;
+            Debug.Log(monsters[mobTypeNum].name);
 
             // to gen multiple mobs
-            float count = Mathf.Pow(mobTypeNum, mobTypeNum) * mobTypeNum;
+            float count = Mathf.Pow(mobTypeNum + 1, 3);
 
             // get random point around player 
             Vector3 randomPos = Random.insideUnitSphere.normalized;
@@ -62,33 +59,31 @@ public class MonsterSpawner : MonoBehaviour
 
             while (count > 0)
             {
+
                 GameObject newMob = null;
 
                 // set monster type
                 switch (mobTypeNum)
                 {
                     // type 1 mob
-                    case 1:
-                        newMob = ObjectPool.Inst.BringObject(monster1);
+                    case 0:
+                        newMob = ObjectPool.Inst.BringObject(monsters[mobTypeNum]);
                         newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp1;
                         newMob.transform.position = randomPos;
                         newMob.transform.LookAt(player.transform);
                         break;
 
                     // type 2 mob
-                    case 2:
+                    case 1:
                         {
-                            newMob = ObjectPool.Inst.BringObject(monster2);
+                            newMob = ObjectPool.Inst.BringObject(monsters[mobTypeNum]);
                             newMob.GetComponent<Monster>().SetMonsterType = Monster.MonsterType.temp2;
-                                                      
                             newMob.transform.position = randomPos;
                             newMob.transform.LookAt(player.transform);
-                            newMob.transform.position += newMob.transform.right * (count * 1.5f - 4f) * 2;
+                            newMob.transform.position += Vector3.left * (count * 1.5f - 6) * 2;
                         }
                         break;
                 }
-
-
 
                 count--;
             }

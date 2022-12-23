@@ -37,6 +37,8 @@ public class Monster : MonoBehaviour
         transform.LookAt(player.transform.position);
 
         MonsterHP = 3;
+
+        Invoke("goWay", 8f);
     }
 
     void Update()
@@ -72,6 +74,13 @@ public class Monster : MonoBehaviour
         ObjectPool.Inst.BringObject(expItem).transform.position = this.transform.position;
         ObjectPool.Inst.DestroyObject(this.gameObject);
     }
+
+    private void goWay()
+    {
+        ObjectPool.Inst.DestroyObject(this.gameObject);
+
+    }
+
 
     // monster damage ====================================================================
 

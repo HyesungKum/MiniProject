@@ -25,29 +25,24 @@ public class ObjectPool : MonoSingleTon<ObjectPool>
             pooling.Add(key, objectList);
         }
 
-        // pool이 비어있다면 새로 생성
-        if (pooling[key].Count == 0)
-        {
-            // 생성 & list에 추가
-            newObject = Instantiate(targetObj);
-        }
 
-        else
+        foreach (GameObject obejctInPool in pooling[key])
         {
-            foreach (GameObject obejctInPool in pooling[key])
+            // 비활성화된 오브젝트가 있다면
+            if (!obejctInPool.activeSelf)
             {
-                // 비활성화된 오브젝트가 있다면
-                if (!obejctInPool.activeSelf)
-                {
-                    obejctInPool.SetActive(true);
-                    newObject = obejctInPool;
-                    pooling[key].Remove(obejctInPool);
-                    break;
-                }
+                obejctInPool.SetActive(true);
+                newObject = obejctInPool;
+                pooling[key].Remove(obejctInPool);
+                return newObject;
             }
         }
 
+
+        // 생성 & list에 추가
+        newObject = Instantiate(targetObj);
         newObject.name = newObject.name.Replace("(Clone)", "");
+
         return newObject;
     }
 

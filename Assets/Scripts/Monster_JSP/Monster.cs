@@ -7,7 +7,6 @@ using UnityEngine.Animations;
 public class Monster : MonoBehaviour
 {
 
-    // ���� Ÿ�� 
     [Header("Monster Info")]
     [SerializeField] MonsterType mobType;
     [SerializeField] float MonsterHP;
@@ -23,7 +22,7 @@ public class Monster : MonoBehaviour
         temp2 = 8
     }
 
-    // player ��ġȮ���� ����
+
     Playable player = null;
 
 
@@ -42,7 +41,7 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
-        // HP�� 0�̵Ǹ� �ı� 
+
         if (MonsterHP <= 0)
         {
             destroyMyself();
@@ -50,7 +49,7 @@ public class Monster : MonoBehaviour
         }
 
 
-        // ���� Ÿ�Կ� ���� �̵� �ӵ� �� ���� ����
+
         if (mobType == MonsterType.temp1)
         {
             this.transform.LookAt(player.transform);
@@ -65,19 +64,16 @@ public class Monster : MonoBehaviour
         transform.Translate(monsterSpeed * Time.deltaTime * Vector3.forward);
     }
 
-    // monster �ֱ� ����====================================================================
+    // monster destroy ====================================================================
 
     void destroyMyself()
     {
-        // ���� ��� ��ġ�� ������ ���� 
-        // onDisable �� ������ ���� ��û�� �ϸ� ���� �޼��� ���� 
-        ObjectPool.Inst.BringObject("expItem").transform.position = this.transform.position;
 
-        // ���͸� Ǯ�� �ִ´�
+        ObjectPool.Inst.BringObject(expItem).transform.position = this.transform.position;
         ObjectPool.Inst.DestroyObject(this.gameObject);
     }
 
-    // monster damage ����====================================================================
+    // monster damage ====================================================================
 
     public void Damage(float damage)
     {

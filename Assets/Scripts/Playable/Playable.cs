@@ -184,7 +184,7 @@ public class Playable : MonoBehaviour
     }
     public void HealthCtl()
     {
-        if (curHp <= 0) MonsterSpawner.Inst.DestroyMonster(this.gameObject);
+        if (curHp <= 0) ObjectPool.Inst.DestroyObject(this.gameObject);
     }
 
     //=======================Inner function===========================

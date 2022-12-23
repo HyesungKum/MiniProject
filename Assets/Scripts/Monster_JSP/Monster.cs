@@ -75,7 +75,7 @@ public class Monster : MonoBehaviour
 
     private void OnDisable()
     {
-        MonsterSpawner.Inst.BringObject("expItem");
+        Instantiate(expItem, this.transform.position, Quaternion.identity);
     }
 
 

@@ -12,16 +12,12 @@ public class WeaponNormal : Weapon
 
     private float Timer = 0f;
 
-    public override void Update()
+    public override void MoveProd()
     {
         Timer += Time.deltaTime;
 
         if (Timer >= duration) Destroy(this.gameObject);
-        base.Update();
-    }
 
-    public override void MoveProd()
-    {
         this.transform.position += -this.transform.right * Time.deltaTime * Speed;
     }
 

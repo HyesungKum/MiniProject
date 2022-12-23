@@ -162,6 +162,7 @@ public class Playable : MonoBehaviour
 
         if (curExp >= LevelData[curLevel-1].maxExp)
         {
+            
             curLevel++;
 
             SetPCParameter(curLevel);

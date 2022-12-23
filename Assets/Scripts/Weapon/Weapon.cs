@@ -5,15 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public abstract class Weapon : MonoBehaviour
 {
-    private Collider weaponColl = null;
+    protected Collider weaponColl = null;
 
-    private void Awake()
+    protected void Awake()
     {
         weaponColl = this.GetComponent<Collider>();
         weaponColl.isTrigger = true;
     }
 
-    public virtual void Update()
+    protected void Update()
     {
         MoveProd();
     }

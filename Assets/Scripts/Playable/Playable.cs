@@ -18,7 +18,8 @@ public class Playable : MonoBehaviour
     }
     [field: SerializeField] PlayMode playMode { get; set; }
 
-    //==========================level data sheet
+    //==========================level data sheet==============================
+    [Header("Parameter")]
     [SerializeField] PC_LevelData[] LevelData = null;
 
     //======================current player data scope==========================
@@ -33,9 +34,16 @@ public class Playable : MonoBehaviour
     [field: SerializeField] int curExp { get; set; }
 
     //=========================================================================
+    [Header("Weapon")]
+    [SerializeField] GameObject weaponPrefabs = null;
+
+    [Header("Getting Range")]
     [SerializeField] private AbsorbRange AbsorbRange = null;
 
+    //==============================inner variables===========================
     private Vector3 moveDir = Vector3.forward;
+    private float AttackTimer = 0f;
+
 
     private void Awake()
     {
@@ -47,9 +55,10 @@ public class Playable : MonoBehaviour
     {
         MoveControll();
         ExpControll();
+        AttackControll();
 
         #region debug
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (DebugConsole)
         {
             if (Input.GetKeyDown(KeyCode.U))
@@ -77,7 +86,7 @@ public class Playable : MonoBehaviour
         #endif
         #endregion
     }
-    //========================parameter controll====================================
+    //======================== controll====================================
     /// <summary>
     /// setting pc parameter used level
     /// setting upper level out of index, will be return this function
@@ -160,6 +169,16 @@ public class Playable : MonoBehaviour
     public void DropRangeControll()
     {
         AbsorbRange.Collider.radius = curDrop;
+    }
+    public void AttackControll()
+    {
+        AttackTimer += Time.deltaTime;
+
+        if (AttackTimer >= 1f)
+        {
+            AttackTimer = 0f;
+            Instantiate(weaponPrefabs, this.transform.position, Quaternion.LookRotation(moveDir));
+        }
     }
 
     //========================Message==================================

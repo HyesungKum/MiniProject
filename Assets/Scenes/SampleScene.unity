@@ -700,6 +700,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8482549098389809585, guid: f1df4a19437ad8648849daef1f588f1a, type: 3}
+      propertyPath: weaponPrefabs
+      value: 
+      objectReference: {fileID: 7432887295267488205, guid: 8e1a1cdd755b4444e90f6224b30e6ffc, type: 3}
+    - target: {fileID: 8482549098389809585, guid: f1df4a19437ad8648849daef1f588f1a, type: 3}
       propertyPath: <playMode>k__BackingField
       value: 1
       objectReference: {fileID: 0}

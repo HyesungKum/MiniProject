@@ -331,7 +331,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1080, y: 2640}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -514,7 +514,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2022489279}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 2.2, y: 29.4, z: 1.55}
+  m_LocalPosition: {x: 2.2, y: 47.23, z: 1.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -617,9 +617,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MonsterSpawnTime: 6
   SpawnRange: 20
+<<<<<<< HEAD
   monsters:
   - {fileID: 4403106001630998292, guid: f8876503aef8e1d40ad832274a5c62b4, type: 3}
   - {fileID: 4403106001630998292, guid: f69ea364f5ee22243adbfdc6078d7500, type: 3}
+=======
+  monsters: []
+>>>>>>> remotes/origin/main
 --- !u!4 &2098297126
 Transform:
   m_ObjectHideFlags: 0

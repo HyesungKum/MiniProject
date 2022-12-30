@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.16997255, g: 0.20217201, b: 0.23759666, a: 1}
+  m_IndirectSpecularColor: {r: 0.16997303, g: 0.20217267, b: 0.23759748, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -618,8 +618,8 @@ MonoBehaviour:
   MonsterSpawnTime: 6
   SpawnRange: 20
   monsters:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4403106001630998292, guid: f8876503aef8e1d40ad832274a5c62b4, type: 3}
+  - {fileID: 4403106001630998292, guid: f69ea364f5ee22243adbfdc6078d7500, type: 3}
 --- !u!4 &2098297126
 Transform:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class ButtonManager : MonoBehaviour
 
     public void _onClickStart()
     {
-        AsyncOperation loadScene = SceneManager.LoadSceneAsync("SampleScene");
+        SceneManager.LoadSceneAsync("SampleScene 1");
     }
 
     public void _onClickOptin()
